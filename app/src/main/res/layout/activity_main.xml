@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mso_note"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="false"
+    android:windowSoftInputMode="stateHidden"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:id="@+id/parent_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/partyname_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:text="@string/party_name"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="18sp"
+                tools:ignore="RtlCompat" />
+
+            <AutoCompleteTextView
+                android:id="@+id/partyname"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="5"
+                android:ems="10"
+                android:hint ="@string/party_name_hint"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textAlignment="viewStart"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                tools:ignore="RtlCompat,SpeakableTextPresentCheck">
+
+                <requestFocus />
+            </AutoCompleteTextView>
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added while update the app for GH Ind-->
+
+        <RadioGroup
+            android:id="@+id/radiogroup_sales_type"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Radio_sales_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:text="@string/sales_type"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radio_sale_type_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/sale_type_1"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_sale_type_2"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/sale_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </RadioGroup>
+
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added while update the app for GH Ind-->
+
+        <LinearLayout
+            android:id="@+id/po_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/po"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="start|center_vertical"
+                android:text="@string/po_number"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:ignore="RtlCompat" />
+
+            <EditText
+                android:id="@+id/po_text"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="5"
+                android:selectAllOnFocus="true"
+                android:gravity="start|center_vertical"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textAlignment="viewStart"
+                tools:ignore="RtlCompat,SpeakableTextPresentCheck" />
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added while update the app for GH Ind-->
+        <LinearLayout
+            android:id="@+id/po_date_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/po_date"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="start|center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/po_date"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:ignore="RtlCompat" />
+
+            <EditText
+                android:id="@+id/po_date_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|start"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:inputType="date"
+                android:hint="@string/date_hint"
+                android:clickable="true"
+                android:focusable="false"
+                android:onClick="pickdate"
+                android:textAlignment="viewStart"
+                tools:ignore="RtlCompat" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radiogroup_order_from"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_order_from_1"
+                android:layout_width="91dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/order_from_1"
+                android:textColor="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_order_from_2"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/order_from_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_order_from_3"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/order_from_3"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </RadioGroup>
+
+
+        <LinearLayout
+            android:id="@+id/mso_notes_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/mso_notes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center_vertical"
+                android:text="@string/notes"
+                android:textAlignment="textStart"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:ignore="RtlCompat" />
+            <EditText
+                android:id="@+id/mso_notes_text"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="5"
+                android:selectAllOnFocus="true"
+                android:gravity="center_vertical"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textAlignment="textStart"
+                tools:ignore="RtlCompat,SpeakableTextPresentCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_order_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/main_input_layout_0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/edit_button_main"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:contentDescription="@string/Edit_so_description"
+                    android:onClick="onEditSO"
+                    android:src="@drawable/ic_menu_edit"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                    tools:src="@android:drawable/ic_menu_edit" />
+
+                <ImageButton
+                    android:id="@+id/duplicate_button_main"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:contentDescription="@string/copy_so_description"
+                    android:onClick="onDuplicateSO"
+                    android:src="@drawable/what_text"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                    tools:src="@android:drawable/ic_menu_edit" />
+
+                <TextView
+                    android:id="@+id/reference_row"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/save_main_inquiry"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#555"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:text="@string/save"
+                android:onClick="onSaveOrder"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:id="@+id/clear_inquiry"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#555"
+                android:onClick="onClearOrder"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:text="@string/clear"
+                android:textAlignment="center"
+                android:textColor="#FFF" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

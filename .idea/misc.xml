@@ -1,0 +1,45 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2708333333333333" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable-v26/ic_launcher.xml" value="0.17291666666666666" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable-v26/ic_launcher_foreground.xml" value="0.2015625" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable-v26/ic_launcher_foreground1.xml" value="0.2015625" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable/GH_Login_Logo_background.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2708333333333333" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable/profile_icon.xml" value="0.23055555555555557" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/drawable/user_profile_image_background.xml" value="0.23055555555555557" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout-w936dp/field_main.xml" value="0.268" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout-w936dp/field_main_copy.xml" value="0.1" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout-w936dp/form_sub.xml" value="0.1" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout-w936dp/form_sub_copy.xml" value="0.1" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/activity_display_message.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/activity_login.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/field.xml" value="0.1" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/field_main.xml" value="0.2546875" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/form_sub.xml" value="0.13697916666666668" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/hline.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/login.xml" value="0.4" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/order_form.xml" value="0.2" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/table.xml" value="0.10833333333333334" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/table_row.xml" value="0.2546875" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/layout/toolbar.xml" value="0.3" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/menu/menu_main.xml" value="0.2546875" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/mipmap-anydpi-v26/GH_Login_Logo.xml" value="0.14375" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/mipmap-anydpi-v26/GH_Login_Logo_round.xml" value="0.14375" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.268" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/mipmap-xxxhdpi/ic_launcher_gh.xml" value="0.14375" />
+        <entry key="..\:/Users/nagas/AndroidStudioProjects/SmindsTridentApp/app/src/main/res/xml/provider_paths.xml" value="0.1203125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

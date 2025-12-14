@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mso_note"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="false"
+    android:paddingTop="20dp"
+    android:windowSoftInputMode="stateHidden"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:id="@+id/parent_linear_layout_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:windowSoftInputMode="stateHidden"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/compo_name_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textCompo"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/composition"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <AutoCompleteTextView
+                android:id="@+id/compo"
+                android:text = "@string/compo_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:dropDownWidth="wrap_content"
+                android:gravity="start"
+                android:inputType="text"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck">
+                <requestFocus/>
+            </AutoCompleteTextView>
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added Form type
+        <LinearLayout
+            android:id="@+id/Form_type_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:longClickable="false"
+            android:nestedScrollingEnabled="false"
+            android:orientation="horizontal">-->
+
+        <RadioGroup
+            android:id="@+id/radiogroup_form_type"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+           <!-- <TextView
+                android:id="@+id/Radio_form_type"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:text="@string/form"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="20sp" /> -->
+
+            <RadioButton
+                android:id="@+id/radio_form_type_1"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/form_type_1"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_form_type_2"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/form_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_form_type_3"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/form_type_3"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </RadioGroup>
+
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for Thickness -->
+        <LinearLayout
+            android:id="@+id/thickness_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textThickness"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/thickness"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_thickness_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="numberDecimal"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added Thickness unit-->
+        <RadioGroup
+            android:id="@+id/radiogroup_thickness_unit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/radio_thickness_unit_1"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/unit_type_1"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_thickness_unit_2"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/unit_type_3"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_thickness_unit_3"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/unit_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </RadioGroup>
+
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for Width -->
+        <LinearLayout
+            android:id="@+id/width_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textWidth"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/width"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_width_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="numberDecimal"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added Thickness unit-->
+        <RadioGroup
+            android:id="@+id/radiogroup_width_unit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_width_unit_1"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:checked="true"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:orientation="horizontal"
+                        android:text="@string/unit_type_1"
+                        android:textColorHighlight="@color/black"
+                        android:textColorLink="@color/black"
+                        android:textSize="18sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <RadioButton
+                        android:id="@+id/radio_width_unit_2"
+                        android:layout_width="42dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:text="@string/unit_type_2"
+                        android:textSize="18sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <RadioButton
+                        android:id="@+id/radio_width_unit_3"
+                        android:layout_width="42dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:text="@string/unit_type_4"
+                        android:textSize="18sp"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </RadioGroup>
+
+                <!-- Priyanshu Goradia : 22-08-2023 Added following for length -->
+        <LinearLayout
+            android:id="@+id/length_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textLength"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/length"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_length_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="numberDecimal"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"/>
+
+        </LinearLayout>
+
+
+        <RadioGroup
+            android:id="@+id/radiogroup_length_unit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_length_unit_1"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/unit_type_1"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_length_unit_2"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/unit_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_length_unit_3"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/unit_type_4"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+    </RadioGroup>
+
+    <!-- Priyanshu Goradia : 22-08-2023 Added following for Quantity -->
+        <LinearLayout
+            android:id="@+id/quantity_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textQuantity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/quantity"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_quantity_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="numberDecimal"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added Quantity unit-->
+
+
+        <RadioGroup
+            android:id="@+id/radiogroup_quantity_unit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/radio_quantity_unit_1"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/quantity_unit_type_1"
+                android:textColorHighlight="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_quantity_unit_2"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/quantity_unit_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_quantity_unit_3"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/quantity_unit_type_3"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+    </RadioGroup>
+
+    <!-- Priyanshu Goradia : 22-08-2023 Added following for Rate -->
+        <LinearLayout
+            android:id="@+id/rate_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textrate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/rate"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_rate_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="numberDecimal"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!--    Priyanshu Goradia : 22-08-2023 : Added Hardness -->
+
+        <RadioGroup
+            android:id="@+id/radiogroup_hardness"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_order_from_1"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:text="@string/hardness_type_1"
+                android:textColor="@color/black"
+                android:textColorLink="@color/black"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_order_from_4"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/hardness_type_4"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_order_from_2"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:checked="true"
+                android:text="@string/hardness_type_2"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <RadioButton
+                android:id="@+id/radio_order_from_3"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/hardness_type_3"
+                android:textSize="18sp"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </RadioGroup>
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for Hardness Min -->
+        <LinearLayout
+            android:id="@+id/Hardness_min_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/texhardness_min"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/hardness_min"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_hardness_min_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:inputType="numberDecimal"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for Hardness max -->
+        <LinearLayout
+            android:id="@+id/Hardness_max_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/texthardness_max"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|start"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/hardness_max"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/number_hardness_max_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:inputType="numberDecimal"
+                android:textAlignment="viewStart"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for Item code number -->
+        <LinearLayout
+            android:id="@+id/Item_code_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_so_item_code"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/item_code"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/text_so_item_code_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="start"
+                android:inputType="text|textCapWords"
+                android:selectAllOnFocus="true"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <!-- Priyanshu Goradia : 22-08-2023 Added following for SO Note -->
+        <LinearLayout
+            android:id="@+id/So_note_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_so_note"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center|start"
+                android:text="@string/so_note"
+                android:textAlignment="viewStart"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/text_so_note_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:selectAllOnFocus="true"
+                android:gravity="start"
+                android:inputType="text|textCapWords"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/save_inquiry"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#555"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:text="@string/save"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:id="@+id/cancel_inquiry"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#555"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:text="@string/cancel"
+                android:textAlignment="center"
+                android:textColor="#FFF"
+                android:textSize="12sp"
+                style="?android:attr/buttonBarButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
