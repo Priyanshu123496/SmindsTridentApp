@@ -3,9 +3,10 @@ package com.sminds.smindstridentapp;
 public class SmindConstants {
     // web service url constants
     public class ServiceType {
-        //public static final String BASE_URL = "https://sminds-ghi-v2.dyndns.org/extensions/";
+        public static final String BASE_URL = "https://sminds-ghi-v2.dyndns.org/extensions/";
 
-        public static final String BASE_URL = "http://13.203.146.186/extensions/";
+        //public static final String BASE_URL = "http://13.203.146.186/extensions/";
+
         //public static final String BASE_URL = "http://35.154.103.200/extensions/";
         //public static final String BASE_URL = "http://35.154.103.200/sminds_ghi_mobile_app/";
         //public static final String BASE_URL = "http://smirp.dyndns.org:81/smi_inquiry/test_gh/";

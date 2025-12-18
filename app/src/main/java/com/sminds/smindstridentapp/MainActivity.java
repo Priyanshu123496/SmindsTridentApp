@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -37,11 +38,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -52,16 +57,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.io.BufferedWriter;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Define connection constants (assuming these were in the original code, as the HTTP logic requires them)
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+    
     private AutoCompleteTextView etpartyname, etcompo;
     private TextView etreferencerow;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
-    private static LinearLayout parentLinearLayout;
-    private static LinearLayout main_order_layout;
+    private LinearLayout parentLinearLayout;
+    private LinearLayout main_order_layout;
     private String partyname;
     private String pono;
     private String podate;
@@ -69,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RadioButton rbtsalestype, rbtorderby, rbtform, rbtthicknessunit, rbtwidthunit, rbtlengthunit, rbtquantityunit, rbthardness;
     private RadioGroup rgrpsalestype, rgrpform, rgrpthickness_unit, rgrpwidth_unit, rgrplength_unit, rgrpquantity_unit, rgrphardness;
-    private static String[] s = new String[2];
+    private static final String[] s = new String[2];
 
     private static List<String> contacts_array, compo_array;
     private static PreferenceHelper preferenceHelper;
@@ -111,9 +121,6 @@ public class MainActivity extends AppCompatActivity {
         compo_array = new ArrayList<>();
 
         service.execute(() -> {
-            runOnUiThread(() -> {
-                //OnPreExecuteMethod
-            });
             //doInBackground
             try {
                 String urlWebService_contacts = SmindConstants.ServiceType.PARAM_CUSTOMER_LIST;
@@ -147,15 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 responseStrBuilder.deleteCharAt(responseStrBuilder.length() - 1);
                 s[1] = responseStrBuilder.toString().trim();
                 responseStrBuilder.setLength(0);
-//                Toast.makeText(MainActivity.this, "Entered in maint activity try function", Toast.LENGTH_LONG).show();
 
-            } catch (MalformedURLException | UnsupportedEncodingException e) {
-                Log.e("MainActivity", "Error in setDefaults", e);
-            } catch (UnknownHostException e) {
-                Log.e("MainActivity", "Error in setDefaults", e);
             } catch (IOException e) {
-                Log.e("MainActivity", "Error in setDefaults", e);
-            } catch (Exception e) {
                 Log.e("MainActivity", "Error in setDefaults", e);
             }
             //doPostExecute
@@ -173,16 +173,11 @@ public class MainActivity extends AppCompatActivity {
                         contacts_array.add(contacts);
                     }
 
-                    final View activity_main_view = getLayoutInflater().inflate(R.layout.activity_main, null);
                     adapter_contacts = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, contacts_array);
                     etpartyname = findViewById(R.id.partyname);
                     etpartyname.setThreshold(2);
                     etpartyname.setAdapter(adapter_contacts);
 
-                    rgrpsalestype = activity_main_view.findViewById(R.id.radiogroup_sales_type);
-                    int radio_salestype_selectedId = rgrpsalestype.getCheckedRadioButtonId();
-
-                    rbtsalestype = findViewById(radio_salestype_selectedId);
                     // Find the EditText by its ID
                     EditText poDateEditText = findViewById(R.id.po_date_text);
 
@@ -199,42 +194,40 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject jsonObj = jsonArr_compo.getJSONObject(i);
                         String compo = jsonObj.getString("compo_name");
                         compo_array.add(compo);
-
                     }
+                    final View editOrderFormView = getLayoutInflater().inflate(R.layout.order_form,null);
 
-                    final View editOrderFormView = getLayoutInflater().inflate(R.layout.order_form, null);
-
-                    rgrpform = editOrderFormView.findViewById(R.id.radiogroup_form_type);
+                    rgrpform = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_form_type);
                     int radio_form_selectedId = rgrpform.getCheckedRadioButtonId();
 
-                    rbtform = editOrderFormView.findViewById(radio_form_selectedId);
+                    rbtform = (RadioButton) editOrderFormView.findViewById(radio_form_selectedId);
 
-                    rgrpthickness_unit = editOrderFormView.findViewById(R.id.radiogroup_thickness_unit);
+                    rgrpthickness_unit = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_thickness_unit);
                     int radio_thickness_unit_selectedId = rgrpthickness_unit.getCheckedRadioButtonId();
 
-                    rbtthicknessunit = editOrderFormView.findViewById(radio_thickness_unit_selectedId);
+                    rbtthicknessunit = (RadioButton) editOrderFormView.findViewById(radio_thickness_unit_selectedId);
 
-                    rgrpwidth_unit = editOrderFormView.findViewById(R.id.radiogroup_width_unit);
+                    rgrpwidth_unit = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_width_unit);
                     int radio_width_unit_selectedId = rgrpwidth_unit.getCheckedRadioButtonId();
 
-                    rbtwidthunit = editOrderFormView.findViewById(radio_width_unit_selectedId);
+                    rbtwidthunit = (RadioButton) editOrderFormView.findViewById(radio_width_unit_selectedId);
 
-                    rgrplength_unit = editOrderFormView.findViewById(R.id.radiogroup_length_unit);
+                    rgrplength_unit = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_length_unit);
                     int radio_length_unit_selectedId = rgrplength_unit.getCheckedRadioButtonId();
 
-                    rbtlengthunit = editOrderFormView.findViewById(radio_length_unit_selectedId);
+                    rbtlengthunit = (RadioButton) editOrderFormView.findViewById(radio_length_unit_selectedId);
 
-                    rgrpquantity_unit = editOrderFormView.findViewById(R.id.radiogroup_quantity_unit);
+                    rgrpquantity_unit = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_quantity_unit);
                     int radio_quantity_unit_selectedId = rgrpquantity_unit.getCheckedRadioButtonId();
 
-                    rbtquantityunit = editOrderFormView.findViewById(radio_quantity_unit_selectedId);
+                    rbtquantityunit = (RadioButton) editOrderFormView.findViewById(radio_quantity_unit_selectedId);
 
-                    rgrphardness = editOrderFormView.findViewById(R.id.radiogroup_hardness);
-                    int radio_hardness_selectedId = rgrphardness.getCheckedRadioButtonId(); // Correct declaration
-                    rbthardness = editOrderFormView.findViewById(radio_hardness_selectedId);
+                    rgrphardness = (RadioGroup) editOrderFormView.findViewById(R.id.radiogroup_hardness);
+                    int radio_hardness_selectedId = rgrphardness.getCheckedRadioButtonId();
 
+                    rbthardness = (RadioButton) editOrderFormView.findViewById(radio_hardness_selectedId);
 
-                    etreferencerow = findViewById(R.id.reference_row);
+                    etreferencerow = (TextView) findViewById(R.id.reference_row);
                     String default_sales_order = getString(R.string.compo_default) + "|"+ rbtform.getText() + "|0.7|" + rbtthicknessunit.getText() + "|350|" + rbtwidthunit.getText() + "|0|" + rbtlengthunit.getText() + "|100|" + rbtquantityunit.getText() +"|600|" + rbthardness.getText() +"|0|0|NA|NA";
                     String default_sales_order_with_space = default_sales_order.replace("|"," | ");
                     etreferencerow.setText(default_sales_order_with_space);
@@ -242,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("MainActivity", "Error parsing JSON in setDefaults", e);
                 }
             });
-
         });
     }
 
@@ -268,43 +260,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int isContactInList(String partyname) {
-        Iterator<String> it = contacts_array.iterator();
-
-        int contact_in_list = 0;
-        while (it.hasNext()) {
-            //Toast.makeText(MainActivity.this, it.next().toString(), Toast.LENGTH_LONG).show();
-            if (partyname.compareTo(it.next()) == 0) {
-                contact_in_list = 1;
-                break;
+        for (String contact : contacts_array) {
+            if (partyname.equals(contact)) {
+                return 1;
             }
         }
-        if (contact_in_list == 0) {
-            Toast.makeText(MainActivity.this, "Please select contact from the list.", Toast.LENGTH_LONG).show();
-            return 0;
-        } else
-            return 1;
+        Toast.makeText(MainActivity.this, "Please select contact from the list.", Toast.LENGTH_LONG).show();
+        return 0;
     }
 
-    // 23-08-2023 Priyanshu goradia : adding Compo in list function.
     public int isCompoInList(String compo) {
-        Iterator<String> it = compo_array.iterator();
-
-        int compo_in_list = 0;
-        while (it.hasNext()) {
-            //Toast.makeText(MainActivity.this, it.next().toString(), Toast.LENGTH_LONG).show();
-            if (compo.compareTo(it.next()) == 0) {
-                compo_in_list = 1;
-                break;
+        for (String c : compo_array) {
+            if (compo.equals(c)) {
+                return 1;
             }
         }
-        if (compo_in_list == 0) {
-            Toast.makeText(MainActivity.this, "Please select Composition from the list.", Toast.LENGTH_LONG).show();
-            return 0;
-        } else
-            return 1;
+        Toast.makeText(MainActivity.this, "Please select Composition from the list.", Toast.LENGTH_LONG).show();
+        return 0;
     }
 
-    // 23-08-2023 : adding Quantity zero check.
     public int isValueZero(String quantity) {
         if (Float.parseFloat(quantity) == 0)
             return 1;
@@ -312,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
             return 0;
     }
 
-    // 23-08-2023 : adding Quantity zero check.
     public int isHardnessTolCorrect(String min_hardness_value, String max_hardness_value) {
         if (Float.parseFloat(min_hardness_value) != 0 && Float.parseFloat(max_hardness_value) != 0) {
 
@@ -325,32 +298,25 @@ public class MainActivity extends AppCompatActivity {
             } else if (Float.parseFloat(max_hardness_value) <= Float.parseFloat(min_hardness_value)) {
                 Toast.makeText(MainActivity.this, "Please enter Max Hardness must be greate than Min Hardness.", Toast.LENGTH_LONG).show();
                 return 1;
-            }
-            else
+            } else
                 return 0;
-        }
-        else if ( Float.parseFloat(min_hardness_value) != 0 && Float.parseFloat(max_hardness_value) == 0 ){
-                if (Float.parseFloat(min_hardness_value) < 45 || Float.parseFloat(min_hardness_value) > 250) {
-                    Toast.makeText(MainActivity.this, "Please enter Min Hardness value between 45 and 250.", Toast.LENGTH_LONG).show();
-                    return 1;
-                }
-                else
-                    return 0;
-        }
-        else if ( Float.parseFloat(max_hardness_value) != 0 && Float.parseFloat(min_hardness_value) == 0 ){
+        } else if (Float.parseFloat(min_hardness_value) != 0 && Float.parseFloat(max_hardness_value) == 0) {
+            if (Float.parseFloat(min_hardness_value) < 45 || Float.parseFloat(min_hardness_value) > 250) {
+                Toast.makeText(MainActivity.this, "Please enter Min Hardness value between 45 and 250.", Toast.LENGTH_LONG).show();
+                return 1;
+            } else
+                return 0;
+        } else if (Float.parseFloat(max_hardness_value) != 0 && Float.parseFloat(min_hardness_value) == 0) {
             if (Float.parseFloat(max_hardness_value) < 45 || Float.parseFloat(max_hardness_value) > 250) {
                 Toast.makeText(MainActivity.this, "Please enter Max Hardness value between 45 and 250.", Toast.LENGTH_LONG).show();
                 return 1;
-            }
-            else
+            } else
                 return 0;
-        }
-        else
+        } else
             return 0;
     }
 
-    //29-08-2023 Priyanshu Goradia : Function to check Thickness value is correct
-    public int isThicknessCorrect(String thickness_value, String thickness_unit_selected){
+    public int isThicknessCorrect(String thickness_value, String thickness_unit_selected) {
         if (Float.parseFloat(thickness_value) > 0) {
             if (thickness_unit_selected.equals(getString(R.string.unit_type_1)) && (Float.parseFloat(thickness_value) < 0.05 || Float.parseFloat(thickness_value) > 20)) {
                 Toast.makeText(MainActivity.this, "Please enter Thickness value between 0.05 mm & 20mm.", Toast.LENGTH_LONG).show();
@@ -363,15 +329,13 @@ public class MainActivity extends AppCompatActivity {
                 return 1;
             } else
                 return 0;
-        }
-        else {
+        } else {
             Toast.makeText(MainActivity.this, "Please enter Thickness value greater than 0.", Toast.LENGTH_LONG).show();
             return 1;
         }
     }
 
-    //29-08-2023 Priyanshu Goradia : Function to check Width value is correct
-    public int isWidthCorrect(String width_value, String width_unit_selected){
+    public int isWidthCorrect(String width_value, String width_unit_selected) {
         if (Float.parseFloat(width_value) > 0) {
             if (width_unit_selected.equals(getString(R.string.unit_type_1)) && (Float.parseFloat(width_value) < 6 || Float.parseFloat(width_value) > 650)) {
                 Toast.makeText(MainActivity.this, "Please enter Width value between 6mm & 650mm.", Toast.LENGTH_LONG).show();
@@ -384,43 +348,34 @@ public class MainActivity extends AppCompatActivity {
                 return 1;
             } else
                 return 0;
-        }
-        else {
+        } else {
             Toast.makeText(MainActivity.this, "Please enter Width value greater than 0.", Toast.LENGTH_LONG).show();
             return 1;
         }
     }
 
-
-    //29-08-2023 Priyanshu Goradia : Function to check Length value is correct
-    public int isLengthCorrect(String length_value, String length_unit_selected){
-        if ( length_unit_selected.equals(getString(R.string.unit_type_1)) && (Float.parseFloat(length_value) < 25 || Float.parseFloat(length_value) > 4000) ) {
+    public int isLengthCorrect(String length_value, String length_unit_selected) {
+        if (length_unit_selected.equals(getString(R.string.unit_type_1)) && (Float.parseFloat(length_value) < 25 || Float.parseFloat(length_value) > 4000)) {
             Toast.makeText(MainActivity.this, "Please enter Length value between 25mm & 4000mm.", Toast.LENGTH_LONG).show();
             return 1;
-        }
-        else if (length_unit_selected.equals(getString(R.string.unit_type_2)) && (Float.parseFloat(length_value) < 1 || Float.parseFloat(length_value) > 160) ) {
+        } else if (length_unit_selected.equals(getString(R.string.unit_type_2)) && (Float.parseFloat(length_value) < 1 || Float.parseFloat(length_value) > 160)) {
             Toast.makeText(MainActivity.this, "Please enter Length value between 1 inch & 160 inch.", Toast.LENGTH_LONG).show();
             return 1;
-        }
-        else if (length_unit_selected.equals(getString(R.string.unit_type_4)) && (Float.parseFloat(length_value) <= 0 || Float.parseFloat(length_value) > 13) ) {
+        } else if (length_unit_selected.equals(getString(R.string.unit_type_4)) && (Float.parseFloat(length_value) <= 0 || Float.parseFloat(length_value) > 13)) {
             Toast.makeText(MainActivity.this, "Please enter Length value between 0.01 feet & 13 feet.", Toast.LENGTH_LONG).show();
             return 1;
-        }
-        else
+        } else
             return 0;
     }
 
-    //29-08-2023 Priyanshu Goradia : Function to check Length value is correct
-    public int isRateCorrect(String rate_value, String sales_type_selected){
-        if ( Float.parseFloat(rate_value) <= 0  ) {
+    public int isRateCorrect(String rate_value, String sales_type_selected) {
+        if (Float.parseFloat(rate_value) <= 0) {
             Toast.makeText(MainActivity.this, "Please enter Rate more than INR. 0.", Toast.LENGTH_LONG).show();
             return 1;
-        }
-        else if (sales_type_selected.equals(getString(R.string.sale_type_2)) && (Float.parseFloat(rate_value) < 1 || Float.parseFloat(rate_value) > 200) ) {
+        } else if (sales_type_selected.equals(getString(R.string.sale_type_2)) && (Float.parseFloat(rate_value) < 1 || Float.parseFloat(rate_value) > 200)) {
             Toast.makeText(MainActivity.this, "Please enter JobWork Rate between INR. 1 & 200.", Toast.LENGTH_LONG).show();
             return 1;
-        }
-        else
+        } else
             return 0;
     }
 
@@ -430,196 +385,211 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onDuplicateSO(View v) {
-        LinearLayout row_view = (LinearLayout) v.getParent();
+    LinearLayout row_view = (LinearLayout) v.getParent();
 
-        dialogBuilder = new AlertDialog.Builder(this);
-        ArrayAdapter<String> adapter_compo;
-        final View editOrderFormView = getLayoutInflater().inflate(R.layout.order_form,null);
+    dialogBuilder = new AlertDialog.Builder(this);
+    ArrayAdapter<String> adapter_compo;
+    final View editOrderFormView = getLayoutInflater().inflate(R.layout.order_form, null);
 
+    etreferencerow = (TextView) row_view.getChildAt(2);
+    String default_sales_order_with_space = etreferencerow.getText().toString();
+    String default_sales_order = default_sales_order_with_space.replace(" | ", "|");
+    String[] selected_sales_order = default_sales_order.split("\\|");
 
-        etreferencerow = (TextView) row_view.getChildAt(2);
-        String default_sales_order_with_space = etreferencerow.getText().toString();
-        String default_sales_order=default_sales_order_with_space.replace(" | ", "|");
-        String[] selected_sales_order= default_sales_order.split("\\|");
+    // Assign form fields
+    etcompo = editOrderFormView.findViewById(R.id.compo);
+    rgrpform = editOrderFormView.findViewById(R.id.radiogroup_form_type);
+    EditText etthickness = editOrderFormView.findViewById(R.id.number_thickness_text);
+    rgrpthickness_unit = editOrderFormView.findViewById(R.id.radiogroup_thickness_unit);
+    EditText etwidth = editOrderFormView.findViewById(R.id.number_width_text);
+    rgrpwidth_unit = editOrderFormView.findViewById(R.id.radiogroup_width_unit);
+    EditText etlength = editOrderFormView.findViewById(R.id.number_length_text);
+    rgrplength_unit = editOrderFormView.findViewById(R.id.radiogroup_length_unit);
+    EditText etquantity = editOrderFormView.findViewById(R.id.number_quantity_text);
+    rgrpquantity_unit = editOrderFormView.findViewById(R.id.radiogroup_quantity_unit);
+    EditText etrate = editOrderFormView.findViewById(R.id.number_rate_text);
+    rgrphardness = editOrderFormView.findViewById(R.id.radiogroup_hardness);
+    EditText ethardnessmin = editOrderFormView.findViewById(R.id.number_hardness_min_text);
+    EditText ethardnessmax = editOrderFormView.findViewById(R.id.number_hardness_max_text);
+    EditText etsoitemcode = editOrderFormView.findViewById(R.id.text_so_item_code_text);
+    EditText etsonote = editOrderFormView.findViewById(R.id.text_so_note_text);
+    Button btsave = editOrderFormView.findViewById(R.id.save_inquiry);
+    Button btcancel = editOrderFormView.findViewById(R.id.cancel_inquiry);
 
-        // 29-08-2023 Priyanshu Goradia: Assigning the form ids to variables.
-        etcompo = editOrderFormView.findViewById(R.id.compo);
-        rgrpform = editOrderFormView.findViewById(R.id.radiogroup_form_type);
-        EditText etthickness = editOrderFormView.findViewById(R.id.number_thickness_text);
-        rgrpthickness_unit = editOrderFormView.findViewById(R.id.radiogroup_thickness_unit);
-        EditText etwidth = editOrderFormView.findViewById(R.id.number_width_text);
-        rgrpwidth_unit = editOrderFormView.findViewById(R.id.radiogroup_width_unit);
-        EditText etlength = editOrderFormView.findViewById(R.id.number_length_text);
-        rgrplength_unit = editOrderFormView.findViewById(R.id.radiogroup_length_unit);
-        EditText etquantity = editOrderFormView.findViewById(R.id.number_quantity_text);
-        rgrpquantity_unit = editOrderFormView.findViewById(R.id.radiogroup_quantity_unit);
-        EditText etrate = editOrderFormView.findViewById(R.id.number_rate_text);
-        rgrphardness = editOrderFormView.findViewById(R.id.radiogroup_hardness);
-        EditText ethardnessmin = editOrderFormView.findViewById(R.id.number_hardness_min_text);
-        EditText ethardnessmax = editOrderFormView.findViewById(R.id.number_hardness_max_text);
-        EditText etsoitemcode = editOrderFormView.findViewById(R.id.text_so_item_code_text);
-        EditText etsonote = editOrderFormView.findViewById(R.id.text_so_note_text);
-        Button btsave = editOrderFormView.findViewById(R.id.save_inquiry);
-        Button btcancel = editOrderFormView.findViewById(R.id.cancel_inquiry);
+    // load values into dialog form
+    adapter_compo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, compo_array);
+    etcompo.setThreshold(2);
+    etcompo.setAdapter(adapter_compo);
+    etcompo.setText(selected_sales_order[0]);
+    checkSelectedRadioButton(rgrpform, selected_sales_order[1]);
+    etthickness.setText(selected_sales_order[2]);
+    checkSelectedRadioButton(rgrpthickness_unit, selected_sales_order[3]);
+    etwidth.setText(selected_sales_order[4]);
+    checkSelectedRadioButton(rgrpwidth_unit, selected_sales_order[5]);
+    etlength.setText(selected_sales_order[6]);
+    checkSelectedRadioButton(rgrplength_unit, selected_sales_order[7]);
+    etquantity.setText(selected_sales_order[8]);
+    checkSelectedRadioButton(rgrpquantity_unit, selected_sales_order[9]);
+    etrate.setText(selected_sales_order[10]);
+    checkSelectedRadioButton(rgrphardness, selected_sales_order[11]);
+    ethardnessmin.setText(selected_sales_order[12]);
+    ethardnessmax.setText(selected_sales_order[13]);
+    etsoitemcode.setText(selected_sales_order[14]);
+    etsonote.setText(selected_sales_order[15]);
 
+    dialogBuilder.setView(editOrderFormView);
+    dialog = dialogBuilder.create();
+    dialog.show();
 
-        // 23-08-2023 Priyanshu Goradia : Loading the data to variables
-        adapter_compo = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, compo_array);
-        etcompo.setThreshold(2);
-        etcompo.setAdapter(adapter_compo);
-        etcompo.setText(selected_sales_order[0]);
-        checkSelectedRadioButton (rgrpform,selected_sales_order[1]);
-        etthickness.setText(selected_sales_order[2]);
-        checkSelectedRadioButton (rgrpthickness_unit,selected_sales_order[3]);
-        etwidth.setText(selected_sales_order[4]);
-        checkSelectedRadioButton (rgrpwidth_unit,selected_sales_order[5]);
-        etlength.setText(selected_sales_order[6]);
-        checkSelectedRadioButton (rgrplength_unit,selected_sales_order[7]);
-        etquantity.setText(selected_sales_order[8]);
-        checkSelectedRadioButton (rgrpquantity_unit,selected_sales_order[9]);
-        etrate.setText(selected_sales_order[10]);
-        checkSelectedRadioButton (rgrphardness,selected_sales_order[11]);
-        ethardnessmin.setText(selected_sales_order[12]);
-        ethardnessmax.setText(selected_sales_order[13]);
-        etsoitemcode.setText(selected_sales_order[14]);
-        etsonote.setText(selected_sales_order[15]);
+    btsave.setOnClickListener(order_form_v -> {
+        // validation (same checks as before)
+        String selected_compo = etcompo.getText().toString().trim();
+        if (isCompoInList(selected_compo) == 0) {
+            Toast.makeText(MainActivity.this, "Please select a Composition from list", Toast.LENGTH_LONG).show();
+            return;
+        }
 
+        int radio_form_selectedId = rgrpform.getCheckedRadioButtonId();
+        rbtform = editOrderFormView.findViewById(radio_form_selectedId);
 
-        dialogBuilder.setView(editOrderFormView);
-        dialog = dialogBuilder.create();
-        dialog.show();
+        String thickness_value = etthickness.getText().toString().trim();
+        int radio_thicknessunit_selectedId = rgrpthickness_unit.getCheckedRadioButtonId();
+        rbtthicknessunit = editOrderFormView.findViewById(radio_thicknessunit_selectedId);
+        if (thickness_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter Thickness more than 0", Toast.LENGTH_LONG).show();
+            return;
+        } else if (isThicknessCorrect(thickness_value, rbtthicknessunit.getText().toString()) == 1) {
+            return;
+        }
 
+        String width_value = etwidth.getText().toString().trim();
+        int radio_widthunit_selectedId = rgrpwidth_unit.getCheckedRadioButtonId();
+        rbtwidthunit = editOrderFormView.findViewById(radio_widthunit_selectedId);
+        if (width_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter Width more than 0.", Toast.LENGTH_LONG).show();
+            return;
+        } else if (isWidthCorrect(width_value, rbtwidthunit.getText().toString()) == 1) {
+            return;
+        }
 
+        int selected_form_id = rbtform.getId();
+        int radio_lengthunit_selectedId = rgrplength_unit.getCheckedRadioButtonId();
+        rbtlengthunit = editOrderFormView.findViewById(radio_lengthunit_selectedId);
 
-        btsave.setOnClickListener(order_form_v -> {
-            //public void onClick(View order_form){
+        String length_value = etlength.getText().toString().trim();
+        if (length_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter 0 or more value in Length", Toast.LENGTH_LONG).show();
+            return;
+        } else if (selected_form_id == R.id.radio_form_type_2) {
+            if (isLengthCorrect(length_value, rbtlengthunit.getText().toString()) == 1) {
+                return;
+            }
+        } else if (selected_form_id == R.id.radio_form_type_3 && Float.parseFloat(length_value) != 0) {
+            if (isLengthCorrect(length_value, rbtlengthunit.getText().toString()) == 1) {
+                return;
+            }
+        }
 
-                // 23-08-2023 Priyanshu Goradia : checking for Composition is from the list.
-                String selected_compo = etcompo.getText().toString().trim();
-                if(isCompoInList(selected_compo) == 0)
-                {
-                    Toast.makeText(MainActivity.this, "Please select a Composition from list", Toast.LENGTH_LONG).show();
-                    return;
-                }
+        String quantity_value = etquantity.getText().toString().trim();
+        if (quantity_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter Quantity more than 0.", Toast.LENGTH_LONG).show();
+            return;
+        } else if (isValueZero(quantity_value) == 1) {
+            Toast.makeText(MainActivity.this, "Please enter Quantity greater than zero", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_form_selectedId = rgrpform.getCheckedRadioButtonId();
-                rbtform = editOrderFormView.findViewById(radio_form_selectedId);
+        int radio_quantityunit_selectedId = rgrpquantity_unit.getCheckedRadioButtonId();
+        rbtquantityunit = editOrderFormView.findViewById(radio_quantityunit_selectedId);
 
-                // 29-08-2023 Priyanshu Goradia : Checking if thickness is correct
-                String thickness_value = etthickness.getText().toString().trim();
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_thicknessunit_selectedId = rgrpthickness_unit.getCheckedRadioButtonId();
-                rbtthicknessunit = editOrderFormView.findViewById(radio_thicknessunit_selectedId);
-                if (thickness_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter Thickness more than 0", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(isThicknessCorrect(thickness_value,rbtthicknessunit.getText().toString()) == 1)
-                {
-                    return;
-                }
+        rgrpsalestype = findViewById(R.id.radiogroup_sales_type);
+        int radio_salestype_selectedId = rgrpsalestype.getCheckedRadioButtonId();
+        rbtsalestype = findViewById(radio_salestype_selectedId);
+        String rate_value = etrate.getText().toString().trim();
+        if (rate_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter Rate more than 0.", Toast.LENGTH_LONG).show();
+            return;
+        } else if (isRateCorrect(rate_value, rbtsalestype.getText().toString()) == 1) {
+            return;
+        }
 
-                // 29-08-2023 Priyanshu Goradia : Checking if Width is correct
-                String width_value = etwidth.getText().toString().trim();
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_widthunit_selectedId = rgrpwidth_unit.getCheckedRadioButtonId();
-                rbtwidthunit = editOrderFormView.findViewById(radio_widthunit_selectedId);
-                if (width_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter Width more than 0.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(isWidthCorrect(width_value,rbtwidthunit.getText().toString()) == 1)
-                {
-                    return;
-                }
+        int radio_hardnessunit_selectedId = rgrphardness.getCheckedRadioButtonId();
+        rbthardness = editOrderFormView.findViewById(radio_hardnessunit_selectedId);
 
-                // 23-08-2023 Priyanshu Goradia : checking if Sheet is selected and length is 0.
-                int selected_form_id = rbtform.getId();
+        String min_hardness_value = ethardnessmin.getText().toString().trim();
+        String max_hardness_value = ethardnessmax.getText().toString().trim();
+        if (min_hardness_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter 0 or more value in Min Hardness.", Toast.LENGTH_LONG).show();
+            return;
+        } else if (max_hardness_value.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter 0 or more value in Max Hardness.", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            if (isHardnessTolCorrect(min_hardness_value, max_hardness_value) == 1) {
+                return;
+            }
+        }
 
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_lengthunit_selectedId = rgrplength_unit.getCheckedRadioButtonId();
-                rbtlengthunit = editOrderFormView.findViewById(radio_lengthunit_selectedId);
+        // Build order string
+        String order = etcompo.getText() + "|" + rbtform.getText().toString() + "|" + etthickness.getText() + "|" + rbtthicknessunit.getText().toString() + "|" + etwidth.getText() + "|" + rbtwidthunit.getText().toString() + "|" + etlength.getText() + "|" + rbtlengthunit.getText().toString() + "|" + etquantity.getText() + "|" + rbtquantityunit.getText().toString() + "|" + etrate.getText() + "|" + rbthardness.getText().toString() + "|" + ethardnessmin.getText() + "|" + ethardnessmax.getText() + "|" + etsoitemcode.getText() + "|" + etsonote.getText();
+        String order_with_space = order.replace("|", " | ");
 
-                String length_value = etlength.getText().toString().trim();
-                if (length_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter 0 or more value in Length", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if (selected_form_id == R.id.radio_form_type_2) {
-                    if(isLengthCorrect(length_value,rbtlengthunit.getText().toString()) == 1){
-                        return;
-                    }
-                }
-                else if (selected_form_id == R.id.radio_form_type_3 && Float.parseFloat(length_value) != 0){
-                    if(isLengthCorrect(length_value,rbtlengthunit.getText().toString()) == 1){
-                        return;
-                    }
-                }
+        // Inflate the provided template (fields.xml) and populate it.
+        View newRow = getLayoutInflater().inflate(R.layout.field, main_order_layout, false);
 
-                // 29-08-2023 Priyanshu Goradia : checking if Quantity is 0.
-                String quantity_value = etquantity.getText().toString().trim();
-                if (quantity_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter Quantity more than 0.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(isValueZero(quantity_value) == 1)
-                {
-                    Toast.makeText(MainActivity.this, "Please enter Quantity greater than zero", Toast.LENGTH_LONG).show();
-                    return;
-                }
+        // Normalize layout params so buttons are visible — fields.xml had very small widths; set reasonable weights.
+        View editBtn = newRow.findViewById(R.id.edit_button_main);
+        View dupBtn = newRow.findViewById(R.id.duplicate_button_main);
+        View refView = newRow.findViewById(R.id.reference_row);
+        View delBtn = newRow.findViewById(R.id.delete_button);
 
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_quantityunit_selectedId = rgrpquantity_unit.getCheckedRadioButtonId();
-                rbtquantityunit = editOrderFormView.findViewById(radio_quantityunit_selectedId);
+        // Ensure params are LinearLayout.LayoutParams and adjust widths/weights to match existing default row sizing
+        if (editBtn.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) editBtn.getLayoutParams();
+            lp.width = 0;
+            lp.weight = 15; // using integer-like weights (will be normalized with other weights)
+            editBtn.setLayoutParams(lp);
+        }
+        if (dupBtn.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dupBtn.getLayoutParams();
+            lp.width = 0;
+            lp.weight = 15;
+            dupBtn.setLayoutParams(lp);
+        }
+        if (delBtn.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) delBtn.getLayoutParams();
+            lp.width = 0;
+            lp.weight = 15;
+            delBtn.setLayoutParams(lp);
+        }
+        if (refView.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) refView.getLayoutParams();
+            lp.width = 0;
+            lp.weight = 150;
+            refView.setLayoutParams(lp);
+        }
 
-                // 23-08-2023 Priyanshu Goradia : checking if Rate is 0.
-                rgrpsalestype = findViewById(R.id.radiogroup_sales_type);
-                int radio_salestype_selectedId = rgrpsalestype.getCheckedRadioButtonId();
-                rbtsalestype = findViewById(radio_salestype_selectedId);
-                String rate_value = etrate.getText().toString().trim();
-                if (rate_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter Rate more than 0.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if(isRateCorrect(rate_value,rbtsalestype.getText().toString()) == 1)
-                {
-                    //Toast.makeText(MainActivity.this, "Please enter Rate greater than zero", Toast.LENGTH_LONG).show();
-                    return;
-                }
+        // Populate reference text
+        TextView refTv = newRow.findViewById(R.id.reference_row);
+        refTv.setText(order_with_space);
 
+        // Wire click handlers programmatically (keeps behaviour consistent even if XML onClick fails)
+        View duplicateControl = newRow.findViewById(R.id.duplicate_button_main);
+        duplicateControl.setOnClickListener(view -> onDuplicateSO(view));
 
-                // 29-08-2023 Priyanshu Goradia : Getting Selected Radio button id.
-                int radio_hardnessunit_selectedId = rgrphardness.getCheckedRadioButtonId();
-                rbthardness = editOrderFormView.findViewById(radio_hardnessunit_selectedId);
+        View editControl = newRow.findViewById(R.id.edit_button_main);
+        editControl.setOnClickListener(view -> onEditSO(view));
 
-                // 29-08-2023 Priyanshu Goradia : checking if hardness values are correct.
-                String min_hardness_value = ethardnessmin.getText().toString().trim();
-                String max_hardness_value = ethardnessmax.getText().toString().trim();
-                if (min_hardness_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter 0 or more value in Min Hardness.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else if (max_hardness_value.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter 0 or more value in Max Hardness.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                else {
-                    if(isHardnessTolCorrect(min_hardness_value,max_hardness_value) == 1)
-                    {
-                        return;
-                    }
-                }
+        View deleteControl = newRow.findViewById(R.id.delete_button);
+        deleteControl.setOnClickListener(view -> onDelete(view));
 
-                String order = etcompo.getText()+"|"+rbtform.getText().toString()+"|"+etthickness.getText()+"|"+rbtthicknessunit.getText().toString()+"|"+etwidth.getText()+"|"+rbtwidthunit.getText().toString()+"|"+etlength.getText()+"|"+rbtlengthunit.getText().toString()+"|"+etquantity.getText()+"|"+rbtquantityunit.getText().toString()+"|"+etrate.getText()+"|"+rbthardness.getText().toString()+"|"+ethardnessmin.getText()+"|"+ethardnessmax.getText()+"|"+etsoitemcode.getText()+"|"+etsonote.getText();
-                LinearLayout new_row_added = (LinearLayout) main_order_layout.getChildAt(main_order_layout.getChildCount()-1);
-                TextView duplicate_row_text = (TextView) new_row_added.getChildAt(2);
-                String order_with_space = order.replace("|"," | ");
-                duplicate_row_text.setText(order_with_space);
-                dialog.dismiss();
-        });
+        // Add to parent
+        main_order_layout.addView(newRow);
 
-        btcancel.setOnClickListener(v1 -> dialog.dismiss());
+        dialog.dismiss();
+    });
+
+    btcancel.setOnClickListener(v1 -> dialog.dismiss());
     }
 
     public void onSaveOrder(View v) {
@@ -663,31 +633,119 @@ public class MainActivity extends AppCompatActivity {
         ExecutorService service = Executors.newSingleThreadExecutor();
 
         service.execute(() -> {
+            // Re-implementing DB Connection logic here
+            HttpURLConnection conn = null;
+            URL url = null;
+            StringBuilder result = new StringBuilder();
+
+            try {
+                // 1. Setup URL
+                String urlWebService_new_sales_order = SmindConstants.ServiceType.PARAM_NEW_SALES_ORDER;
+                url = new URL(urlWebService_new_sales_order);
+
+                // 2. Setup Connection
+                conn = (HttpURLConnection) url.openConnection();
+                // Set connection properties (using assumed constants based on typical PHP API calls)
+                conn.setReadTimeout(15000); // 15 seconds
+                conn.setConnectTimeout(10000); // 10 seconds
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                // 3. Build POST parameters
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("partyname", partyname)
+                        .appendQueryParameter("po", pono)
+                        .appendQueryParameter("po_date", podate)
+                        .appendQueryParameter("sales_type", rbtsalestype.getText().toString())
+                        .appendQueryParameter("po_source", rbtorderby.getText().toString())
+                        .appendQueryParameter("mso_notes", msonote)
+                        .appendQueryParameter("so_count", Integer.toString(sales_order_array.length));
+                
+                // Concatenate all sales orders into a single string
+                StringBuilder salesOrderString = new StringBuilder();
+                for (int i = 0; i < sales_order_array.length; i++) {
+                    // Replace " | " with "|" and append separator "||"
+                    salesOrderString.append(sales_order_array[i].replace(" | ", "|"));
+                    if (i < sales_order_array.length - 1) {
+                        salesOrderString.append("||");
+                    }
+                }
+                
+                builder.appendQueryParameter("sales_order", salesOrderString.toString());
+                String query = builder.build().getEncodedQuery();
+
+                // 4. Send POST data
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8.name()));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+
+                // 5. Read Response
+                int response_code = conn.getResponseCode();
+                if (response_code == HttpURLConnection.HTTP_OK) {
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                } else {
+                    result.append("exception");
+                }
+
+            } catch (IOException e) {
+                Log.e("MainActivity", "HTTP POST error: " + e.getMessage(), e);
+                result.append("exception");
+            } finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            }
+
+            // Handle server response on UI thread (for toast)
+            String serverResponse = result.toString();
             runOnUiThread(() -> {
-                // Pre-execute UI work if needed
+                if (serverResponse.contains("true")) {
+                    Toast.makeText(MainActivity.this, "Order saved successfully!", Toast.LENGTH_LONG).show();
+                    // You might want to close the activity here if the order is successfully saved:
+                    // MainActivity.this.finish(); 
+                } else if (serverResponse.contains("false") || serverResponse.contains("exception")) {
+                    Toast.makeText(MainActivity.this, "Error saving order. Server response: " + serverResponse, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Order saved but could not confirm status.", Toast.LENGTH_LONG).show();
+                }
             });
 
+
+            // ---------------------------------------------------
+            //  NOTE: WhatsApp sharing logic continues below...
+            // ---------------------------------------------------
+
             // Build WhatsApp text message
-            StringBuilder paramlist = new StringBuilder("\nORDER ACKNOWLEDGEMENT \n");
-            paramlist.append("\nParty Name: ").append(partyname);
-            paramlist.append("\nSales Type: ").append(rbtsalestype.getText().toString());
+            StringBuilder whatsappParamlist = new StringBuilder("\nORDER ACKNOWLEDGEMENT \n");
+            whatsappParamlist.append("\nParty Name: ").append(partyname);
+            whatsappParamlist.append("\nSales Type: ").append(rbtsalestype.getText().toString());
 
             if (!pono.isEmpty()) {
-                paramlist.append("\nPO_No: ").append(pono);
+                whatsappParamlist.append("\nPO_No: ").append(pono);
             }
 
-            paramlist.append("\nPo Date: ").append(podate);
-            paramlist.append("\nPO Source: ").append(rbtorderby.getText().toString());
+            whatsappParamlist.append("\nPo Date: ").append(podate);
+            whatsappParamlist.append("\nPO Source: ").append(rbtorderby.getText().toString());
 
             if (!msonote.isEmpty()) {
-                paramlist.append("\nNote: ").append(msonote);
+                whatsappParamlist.append("\nNote: ").append(msonote);
             }
 
-            paramlist.append("\n\nWe acknowledge the receipt of your following order: \n");
+            whatsappParamlist.append("\n\nWe acknowledge the receipt of your following order: \n");
 
             // Convert each sales order row into WhatsApp-readable format
             for (int i = 0; i < sales_order_array.length; i++) {
-                paramlist.append("\n").append(i + 1).append(") ");
+                whatsappParamlist.append("\n").append(i + 1).append(") ");
 
                 String[] elements = sales_order_array[i].split("\\|", -1);
 
@@ -699,52 +757,53 @@ public class MainActivity extends AppCompatActivity {
                 String temp_sonote = elements[15].trim().toUpperCase();
 
                 if (temp_compo.contains("CuZn")) {
-                    paramlist.append("Brass (").append(temp_compo).append(") ");
+                    whatsappParamlist.append("Brass (").append(temp_compo).append(") ");
                 } else if (temp_compo.contains("Cop")) {
-                    paramlist.append("Copper (").append(temp_compo).append(") ");
+                    whatsappParamlist.append("Copper (").append(temp_compo).append(") ");
                 } else if (temp_compo.contains("CuSn")) {
-                    paramlist.append("Bronze (").append(temp_compo).append(") ");
+                    whatsappParamlist.append("Bronze (").append(temp_compo).append(") ");
                 } else {
-                    paramlist.append(temp_compo).append(" ");
+                    whatsappParamlist.append(temp_compo).append(" ");
                 }
 
-                paramlist.append(temp_form).append(" - ");
-                paramlist.append(elements[2].trim()).append(elements[3].trim()).append(" X ");
-                paramlist.append(elements[4].trim()).append(elements[5].trim());
+                whatsappParamlist.append(temp_form).append(" - ");
+                whatsappParamlist.append(elements[2].trim()).append(elements[3].trim()).append(" X ");
+                whatsappParamlist.append(elements[4].trim()).append(elements[5].trim());
 
                 if (!temp_form.contains("Coil")) {
-                    paramlist.append(" X ").append(elements[6].trim()).append(elements[7].trim()).append(" ");
+                    whatsappParamlist.append(" X ").append(elements[6].trim()).append(elements[7].trim()).append(" ");
                 }
 
-                paramlist.append(" - ");
-                paramlist.append(elements[8].trim()).append(elements[9].trim()).append(" ");
+                whatsappParamlist.append(" - ");
+                whatsappParamlist.append(elements[8].trim()).append(elements[9].trim()).append(" ");
 
-                paramlist.append(elements[11].trim());
+                whatsappParamlist.append(elements[11].trim());
 
                 if (min_hardness != 0) {
                     if (max_hardness != 0) {
-                        paramlist.append("(").append(min_hardness).append(" - ").append(max_hardness).append(")");
+                        whatsappParamlist.append("(").append(min_hardness).append(" - ").append(max_hardness).append(")");
                     } else {
-                        paramlist.append("(min ").append(min_hardness).append(")");
+                        whatsappParamlist.append("(min ").append(min_hardness).append(")");
                     }
                 } else if (max_hardness != 0) {
-                    paramlist.append("(max ").append(max_hardness).append(")");
+                    whatsappParamlist.append("(max ").append(max_hardness).append(")");
                 }
 
-                paramlist.append(" - INR.").append(elements[10].trim()).append("/- ");
+                whatsappParamlist.append(" - INR.").append(elements[10].trim()).append("/- ");
 
                 if (!temp_soitemcode.equals("NA")) {
-                    paramlist.append("ItemCode:-").append(temp_soitemcode).append(" ");
+                    whatsappParamlist.append("ItemCode:-").append(temp_soitemcode).append(" ");
                 }
 
                 if (!temp_sonote.equals("NA")) {
-                    paramlist.append("(").append(temp_sonote).append(")");
+                    whatsappParamlist.append("(").append(temp_sonote).append(")");
                 }
 
-                paramlist.append("\n");
+                whatsappParamlist.append("\n");
             }
 
-            paramlist.append("\nIf any changes, do let us know.\n");
+            whatsappParamlist.append("\nIf any changes, do let us know.\n");
+
 
             // ----------------------------
             // ✅ NEW WHATSAPP SHARE BLOCK
@@ -770,7 +829,7 @@ public class MainActivity extends AppCompatActivity {
 
                     sendIntent.setType("image/*"); // Generic image type
                     sendIntent.putExtra(Intent.EXTRA_STREAM, imgBitmapUri);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, paramlist.toString());
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, whatsappParamlist.toString());
 
                     // ClipData is good for Android 10+ permissions
                     sendIntent.setClipData(ClipData.newUri(getContentResolver(), "Order Image", imgBitmapUri));
@@ -786,13 +845,6 @@ public class MainActivity extends AppCompatActivity {
                 );
                 Log.e("MainActivity", "WhatsApp share error", e);
             }
-
-            // ---------------------------------------------------
-            //  NOTE: Your database save logic continues below...
-
-            // ---------------------------------------------------
-
-            // (Your DB connection + POST code remains unchanged)
 
         });
     }
@@ -823,7 +875,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    // 29-08-2023 Priyanshu Goradia : Created this funtion to check the selected Radio button in the Radio group
+
     public void checkSelectedRadioButton(RadioGroup radioGroup,String desiredTextValue ) {
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
@@ -893,9 +945,11 @@ public class MainActivity extends AppCompatActivity {
         etsoitemcode.setText(selected_sales_order[14]);
         etsonote.setText(selected_sales_order[15]);
 
+
         dialogBuilder.setView(editOrderFormView);
         dialog = dialogBuilder.create();
         dialog.show();
+
 
         btsave.setOnClickListener(order_form_v -> {
             // 23-08-2023 Priyanshu Goradia : checking for Composition is from the list.
